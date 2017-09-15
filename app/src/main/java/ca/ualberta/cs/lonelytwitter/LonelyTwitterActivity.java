@@ -12,6 +12,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,7 +24,7 @@ public class LonelyTwitterActivity extends Activity {
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView oldTweetsList;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,10 +38,27 @@ public class LonelyTwitterActivity extends Activity {
 		saveButton.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
+
+				Tweet tweet = new ImportantTweet("");
+				Tweet tweet1 = new NormalTweet("Hi");
+				try {
+					tweet.setMessage("Hello");
+				} catch (TweetTooLongException e) {
+					// e.printStackTrace();
+				}
+
+				Tweetable tweet3 = new ImportantTweet(" ");
+				ArrayList<Tweet> tweetList = new ArrayList<Tweet>();
+				tweetList.add(tweet);
+				tweetList.add(tweet1);
+				Log.d("Tag", "The isImportant method on tweet returns " + tweet.isImportant());
+				Log.d("Tag", "The isImportant method on tweet1 returns " + tweet1.isImportant());
+
+
 				setResult(RESULT_OK);
 				String text = bodyText.getText().toString();
 				saveInFile(text, new Date(System.currentTimeMillis()));
-				finish();
+				// finish();
 
 			}
 		});
@@ -76,7 +94,7 @@ public class LonelyTwitterActivity extends Activity {
 		}
 		return tweets.toArray(new String[tweets.size()]);
 	}
-	
+
 	private void saveInFile(String text, Date date) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
