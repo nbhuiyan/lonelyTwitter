@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by naz_t on 9/14/2017.
  */
 
-public abstract class CurrentMood {
+public abstract class Mood {
     private Date CurrentDate;
 
     public Date getCurrentDate() {

@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by naz_t on 9/14/2017.
  */
 
-public class Happy extends CurrentMood {
+public class Happy extends Mood {
     public Happy(Date date){
         setCurrentDate(date);
     }
