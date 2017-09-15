@@ -8,14 +8,16 @@ import java.util.Date;
 
 public class Sad extends CurrentMood{
     public Sad(Date date){
-        String Mood = "Sad";
-        setMood(Mood);
         setCurrentDate(date);
     }
     public Sad(){
-        String Mood = "Sad";
-        setMood(Mood);
         Date CurrentDate = new Date();
         setCurrentDate(CurrentDate);
+    }
+
+    @Override
+    public String whatMood() {
+        String mood = "sad";
+        return mood;
     }
 }
