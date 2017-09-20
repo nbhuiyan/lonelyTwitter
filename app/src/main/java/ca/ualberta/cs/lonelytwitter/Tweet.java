@@ -39,6 +39,8 @@ public abstract class Tweet implements Tweetable{
         return date;
     }
 
+    public void setDate()
+
     public abstract Boolean isImportant();
 
     public void moodList(ArrayList<Mood> list){
