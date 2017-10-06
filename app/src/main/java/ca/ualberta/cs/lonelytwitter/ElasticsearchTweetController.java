@@ -10,6 +10,7 @@ import com.searchly.jestdroid.JestDroidClient;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.searchbox.client.JestClient;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
@@ -19,7 +20,15 @@ import io.searchbox.core.SearchResult;
  * Created by romansky on 10/20/16.
  */
 public class ElasticsearchTweetController {
-    private static JestDroidClient client;
+    //private static JestDroidClient client;
+    private static JestClientFactory factory = new JestClientFactory();
+    // from https://github.com/searchbox-io/Jest/tree/master/jest#usage
+    factory.setHttpClientConfig(new HttpClientConfig.Builder("http://localhost:9200")
+            .multiThreaded(true)
+			.defaultMaxTotalConnectionPerRoute(1)
+            .maxTotalConnection(20)
+            .build());
+    static JestClient client = factory.getObject();
 
     // TODO we need a function which adds tweets to elastic search
     public static class AddTweetsTask extends AsyncTask<NormalTweet, Void, Void> {
@@ -58,14 +67,10 @@ public class ElasticsearchTweetController {
 
             ArrayList<NormalTweet> tweets = new ArrayList<NormalTweet>();
 
-            /* String query = "{\n" +
-                    "  \"query\":{\"match_all\":{} },\n" +
-                    "    \"sort\":{\"date\":{\"order\":\"desc\"}},\n" +
-                    "    \"size\":100\n" +
-                    "}";
-            */
+            String query = ("{\"query\" : {\"term\" : { \"message\" : \""
+                    + search_parameters[0] + "\" }}}");
 
-            Search search = new Search.Builder(search_parameters[0])
+            Search search = new Search.Builder(query)
                     .addIndex("testing")
                     .addType("tweet")
                     .build();
@@ -74,6 +79,9 @@ public class ElasticsearchTweetController {
                 if (result.isSucceeded()) {
                     List<NormalTweet> foundTweets = result.getSourceAsObjectList(NormalTweet.class);
                     tweets.addAll(foundTweets);
+                }
+                else {
+                    Log.i("Error", "No matching tweets found");
                 }
             }
             catch (Exception e) {
@@ -94,7 +102,7 @@ public class ElasticsearchTweetController {
 
             JestClientFactory factory = new JestClientFactory();
             factory.setDroidClientConfig(config);
-            client = (JestDroidClient) factory.getObject();
+            client = factory.getObject();
         }
     }
 }
