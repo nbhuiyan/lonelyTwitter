@@ -24,5 +24,9 @@ public class TweetList {
         tweets.remove(tweet);
     }
 
+    public Tweet getTweet(int index){
+        return tweets.get(index);
+    }
+
 
 }
